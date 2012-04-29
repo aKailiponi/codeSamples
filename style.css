@@ -1,0 +1,67 @@
+table
+{
+    border-collapse:collapse; 
+}
+
+td
+{
+    border:2px solid green;
+    width:25%;
+}
+
+div#wrapper
+{
+    width:100%;
+    min-width:480px;
+}
+
+div#pingpong
+{
+    border-style:solid;
+    border-width:2px;
+    border-color:green;
+    padding:3%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div#liquidlayout
+{
+    border-style:solid;
+    border-width:2px;
+    border-color:blue;
+    padding:3%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/*style elements for license calculator start*/
+div#licensecalc
+{
+    border-style:solid;
+    border-width:2px;
+    border-color:red;
+    padding:3%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div#calculator
+{
+    width:47%;
+    float:right;
+    margin-left:3%;
+    margin-bottom:10px;
+    max-width:480px;
+}
+
+input#input
+{
+    width:100%;
+}
+
+.secondcol
+{
+    text-align:right;
+}
+/*style elements for license calculator end*/

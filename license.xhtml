@@ -1,0 +1,66 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Code-Foo Submission</title>
+    <link type="text/css" rel="stylesheet" href="style.css" />
+    <script src="licensecode.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="header">
+    </div>
+    <div id="wrapper">
+        <div id="pingpong">
+            <h2>How many ping pong balls fit into a school bus?</h2>
+            <p>1. Perhaps the first thing we need to do is clarify the problem since it is very vague.  We need to decide what an average sized bus is and what model would constitute an average bus, after all there are buses with different features like added compartments that would effect the results.  We need to know weather we are talking about only the passenger cabin, or are we including every single nook and cranny capable of holding a ping pong ball. Before you solve a problem you need to establish all the parameters otherwise the results end up being less useful as a reference.</p>
+            <p>2. Second I would measure how many ping pong balls fit into a cubic meter. This step is mostly a matter of efficiency. Filling an entire bus with ping pong balls one at a time simply would be too time consuming and prone to human error. A cubic meter seems like a reasonable standard of measurement and the information would be useful if we ever feel like filling lots of other things with ping pong balls in the future.</p>
+            <p>3. Then if we can find a reference that could just tell us the cubic space in meters of an average bus we would already be done. However, a measurement like that would probably not include the space taken up by things like seats. So if we wanted to know for sure ourselves perhaps a hands on approach would be more appropriate. Get a bus and start filling it with ping pong balls one cubic meter at a time until the bus is full. Adding single ping pong balls as necessary to get a more precise answer.</p>
+            <p>4. Finally, if we accept the fact that our result will still have quite a bit of error, and are comfortable with an approximation then we would be done. This is because it is highly unlikely given the nature of ping pong balls that they are optimally "packed" into the bus.  Gaining a more precise measure however would be highly impractical. Perhaps a large mechanism capable of shaking the bus, or perhaps a using a computer generated 3d model that would allow us to optimally fill a virtual bus with virtual ping pong balls. Given the nature of the problem this would seem like overkill in my opinion (because obviously the real thing we should be asking is why we are even trying to solve this problem in the first place?).</p> 
+        </div>
+        <div id="liquidlayout">
+            <h2>The Usefulness of Liquid Layouts</h2>
+            <h3>It's Usage in this Page</h3>
+            <p>As far as how liquid layouts are implemented in this page its probably best to look at the license plate calculator.  The calculator itself is set up to take up about 50% of the available horizontal space and is floated to the right. I implemented the minimum width so that the calculator does not get so small to the point that it extends over the border of its container although this can still happen if impractically large numbers are inputted into the calculator. I chose 480 pixels as the minimum because that is supposedly the size of an iphone. No specific sizes were specified to the text because I simply wanted it to fill up the rest of the available space. I did not bother with messing with fonts or pictures and backrounds, mostly because I don't know what looks good and I did not have appropriate art resources on hand.</p>
+            <h3>Importance of Liquid Layouts</h3>
+            <p>The Internet is full of different format browsers and computers with varying resolutions and specifications.  The advent of mobile devices such as laptops, iphones, and pads have only furthered the variance of formats web sites are expected to support. By not specifying any hard pixel sizes, we can assure that a wider variety of devices and browsers will be able to view the content of a web site in a pleasing manner.</p>
+            <h3>Personal Experience</h3>
+            <p>Honestly speaking I have very little experience writing HTML because my CS major generally emphasizes programming languages over HTML and scripting languages. Almost everything I have written here was studied over the course of a few days.  Learning how to write HTML, Javascript, and CSS was simple, however I understand that web design is just as much about good practice and Aesthetics as it is about knowing the languages. The box model, liquid layouts, and compatibility issues are all things I hope to learn through a mentor which I can gain at an internship.</p>
+        </div>
+        <div id="licensecalc">
+            <h2>License Plate Calculator</h2>
+            <div id="calculator"> 
+                <input type='text' id='input' value='1' />
+                <input type='button' onclick='start()' value='Calculate'/>
+                <table>
+                    <tr>
+                        <td>Population:</td>
+                        <td class="secondcol" id="outputPopulation"></td>
+                    </tr>
+                    <tr>
+                        <td>Number of Numbers:</td>
+                        <td class="secondcol" id="outputNumbers"></td>
+                    </tr>
+                    <tr>
+                        <td>Number of Letters:</td>
+                        <td class="secondcol" id="outputLetters"></td>
+                    </tr>
+                    <tr>
+                        <td>Total Plates:</td>
+                        <td class="secondcol" id="outputPlates"></td>
+                    </tr>
+                    <tr>
+                        <td>Excess Plates:</td>
+                        <td class="secondcol" id="outputExcess"></td>
+                    </tr>
+                </table>
+            </div><!--end calculator-->
+            <div id="textcalc">
+                <h3>Instructions</h3>
+                <p>This calculator find the number and letter combination that will produce the least amount of excess unique license plates given a target population. Simply put the target population of the area in the text box and click on the calculate button to find out the letter and number combination needed to give the given population unique license plates with minimum excess combinations.</p>
+                <h3>Programming Notes</h3>
+                <p>The file licensecode.js contains the javascript file that implements the calculator. First the script finds an upper bound assuming all symbols are numbers, any more symbols or changing any of the symbols to letters will only make the outcome worse. This upper bound serves as our search area.  Then the script simply tries all possible combinations of numbers and letters below the upper bound of symbols storing the best combination that creates the minimum amount of excess plates.  Once all combinations below the max number of symbols are searched the script outputs the best result.</p>
+            </div>
+        </div><!--end licensecalc-->
+    </div><!--end wrapper-->
+</body>
+</html>
