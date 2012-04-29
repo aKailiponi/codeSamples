@@ -1,1 +1,5 @@
-Hello this is the readme!
+Hi this repository is simply a place where I will dump sample code written by myself to be referenced by whoever is intersted. 
+If you have any questions simply send an e-mail to akailiponi@gmail.com and I would be happy to answer them.
+
+USING THE HTML SAMPLE:
+place license.xhtml, licensecode.js, and style.css into the same folder. Open license.xhtml with any browser.
