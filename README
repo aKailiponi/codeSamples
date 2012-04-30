@@ -1,5 +1,38 @@
-Hi this repository is simply a place where I will dump sample code written by myself to be referenced by whoever is intersted. 
-If you have any questions simply send an e-mail to akailiponi@gmail.com and I would be happy to answer them.
+------INTRODUCTION------
+Hi this repository is simply a place where I will dump sample code written by myself to be referenced by whoever is intersted. If you have any questions simply send an e-mail to akailiponi@gmail.com and I would be happy to answer them.
 
-USING THE HTML SAMPLE:
+------USING THE HTML SAMPLE-------
 place license.xhtml, licensecode.js, and style.css into the same folder. Open license.xhtml with any browser.
+
+-------USING THE CONNECT 4 GAME------
+The horifyingly poorly named cppapplication_1.exe is the binary. Just run that to play the game. During your turn type your move, the numbers 0-6 are all valid moves. You always move first and your color is always red represented by'R' on the board.  The computer always goes second as is black represented by 'B' on the board. The computer wont put up much of a challenge but at the very minimum will try to make a connect 4. Be gentle with your inputs, there is no checking for bad inputs. Oh right, the game also doesnt check for a winner and has no exit option. Needless to say there is still much to be implemented.
+
+------THE CODE FOR CONNECT 4------
+The source is contained in the 'connectfour' and the files are set up as a Netbeans project. The following  are the important files:
+'ConnectFour.cpp' - the source of connect 4 written in C++.
+'Makefile' - a 'make all' command should compile the code and tuck away a new executable binary in the 'dist' folder.
+
+------IMPLEMENTATION OF CONNECT 4------
+Currently, all the computer does is it gives a score to each potential move. It scans the 3 surrounding spaces in the 8 major compass directions. Currently the point system is as follows.
+
+5 points for every adjacent black piece.
+1 point for every adjacent empty square.
+1,000,000 points if moving here results in a connect 4.
+
+Using this simple method the computer favors placing pieces near the middle of the board and next to other black pieces.  This also means that the computer doesnt bother trying to block the players connect 4. I plan to implement this as simply as possible. One example would be the following.
+
+500,000 points if it blocks an immenent opponents connect 4.
+
+This would make sure that the computer would prioritize blocking the player heavily, but not prevent the computer from making the winning move.
+
+The point system is conceptually the easiest way to mimic logical moves. By modifying the scoring system we can guide the computer to make resonable moves.  The disadvantage of this method is that the more 'foward thinking' you want the computer to become the more complicated the scoring system becomes, and as a consequnce the complexity of the code baloons rapidly and it becomes difficult to track the reasoning behind every rule and point change. Trying to make the computer create or prevent a 'double jeapordy' situation would require the code to evalute the value of a position based on future board states and implementing that would be difficult using a point system as well as making the code difficult to read.
+
+Probably more ideal but more conceputally difficut is to make a machine learning algorithm that maps every possible board state.  The game of connect 4 is probably not very complex with only 42 spaces, 3 different states on each space, and only potentially 7 valid moves. Most board states are impossible to reach (for instance because someone has already won). Most branches to new board states can be instantly discarded (moving to a particular spot has no way of progressing toward a connect 4). Using a learning algorithm we could simulate games untill a score can be assigned to every move given any board state and the computer can chose the move that results in the most games won. Initially it would be difficult to write up, but once your done you just let er rip and.
+
+------STILL NEED TO IMPLEMENT IN CONNECT 4------
+Listed from most important to least.
+1.Computer will block imminent player connect 4's
+2.Check for win on either side and end game.
+3.Check for bad inputs from player.
+4.Useability improvements to interface, including instructions, and options to quit, and restart games.
+5.Rename the binary to something more appropriate.
