@@ -4,6 +4,9 @@ Hi this repository is simply a place where I will dump sample code written by my
 ------USING THE HTML SAMPLE-------
 place license.xhtml, licensecode.js, and style.css into the same folder. Open license.xhtml with any browser.
 
+------INTRODUCTORY VIDEO------
+'codeFooIntro.wma' is my video. Hopefully my crooked glasses will not be too distracting.
+
 -------USING THE CONNECT 4 GAME------
 The horifyingly poorly named cppapplication_1.exe is the binary. Just run that to play the game. During your turn type your move, the numbers 0-6 are all valid moves. You always move first and your color is always red represented by'R' on the board.  The computer always goes second as is black represented by 'B' on the board. The computer wont put up much of a challenge but at the very minimum will try to make a connect 4. Be gentle with your inputs, there is no checking for bad inputs. Oh right, the game also doesnt check for a winner and has no exit option. Needless to say there is still much to be implemented.
 
