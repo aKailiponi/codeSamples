@@ -16,11 +16,11 @@ place license.xhtml, licensecode.js, and style.css into the same folder. Open li
 
 ----------CONNECT 4 GAME----------
 1.PLAYING THE GAME
-The horifyingly poorly named cppapplication_1.exe is the binary. Just run that to play the game. During your turn type your move, the numbers 0-6 are all valid moves. You always move first and your color is always red represented by'R' on the board.  The computer always goes second as is black represented by 'B' on the board. The computer wont put up much of a challenge but at the very minimum will try to make a connect 4 and prevent your immenent connect 4's. Be gentle with your inputs, there is no checking for bad inputs and backspace will not work. Oh right, the game also doesnt check for a winner and has no exit option. Needless to say there is still much to be implemented.
+The horifyingly poorly named cppapplication_1.exe is the binary. Just run that to play the game. During your turn type your move, the numbers 0-6 are all valid moves. You always move first and your color is always red represented by 'R' on the board.  The computer always goes second as is black represented by 'B' on the board. The computer wont put up much of a challenge but at the very minimum will try to make a connect 4 and prevent your immenent connect 4's. Be gentle with your inputs, there is no checking for bad inputs and backspace will not work. Oh right, the game also doesnt check for a winner and has no exit option. Needless to say there is still much to be implemented.
 
 
 2.SOURCE CODE
-The source is contained in the 'connectfour' and the files are set up as a Netbeans project. The following  are the important files:
+The source is contained in the 'connectfour' folder and the files are set up as a Netbeans project. The following  are the important files:
 'ConnectFour.cpp' - the source of connect 4 written in C++.
 'Makefile' - a 'make all' command should compile the code and tuck away a new executable binary in the 'dist/release' folder.
 
@@ -48,6 +48,7 @@ The point system is conceptually the easiest way for the computer to mimic logic
 A.CORRECTNESS AND FEATURES
 -Need to make the game detect winners, and draws.  The program should end and quit.
 -Allow the player to move second.
+-Get rid of the debugging output that shows the score assigned to each possible move.
 
 
 B.COMPUTER LOGIC IMPROVEMENTS
