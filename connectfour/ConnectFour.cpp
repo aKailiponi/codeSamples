@@ -14,6 +14,17 @@ using namespace std;
 int board[7][6];
 int top[7];
 
+//these are used to evaluate the value of a move by checking segments of board
+int segment[3] = {0, 0, 0};
+int value = 0;
+
+int empty = 0;
+int adjacentBlack = 0;
+int adjacentRed = 0;
+int friendlyBlack = 0;
+
+/* Draws the board.
+ */
 void drawBoard(){
     for(int y = 5; y >= 0; y--){
             for(int x = 0; x < 7; x++){
@@ -35,7 +46,8 @@ void drawBoard(){
         }
         cout << "0 1 2 3 4 5 6" << endl;
 }
-
+/* Queries the player for a move.
+ */ 
 int getPlayerMove(){
     string input = "";
     cout << "Your Move(0-6): ";
@@ -43,212 +55,265 @@ int getPlayerMove(){
     return atoi(input.c_str());
 }
 
+/* Puts a move onto the board.
+ */
 void makeMove(int player, int move){
     board[move][top[move]] = player;
     top[move]++;
 }
+/* Resets all the counts used for evaluating the value of a move
+ */
+void resetEvaluationCounts(){
+    empty = 0;
+    adjacentBlack = 0;
+    adjacentRed = 0;
+    friendlyBlack = 0;
+}
 
-
-int calculateUpDown(int move){
-    int value = 0;
-    
-    //give value below possible move (every black piece below is worth 5 points)
-    int rowIndex = top[move] - 1;
-    int spacesSearched = 3;
-    while(spacesSearched > 0){
-        if(rowIndex < 0)
-            break;
-        if(board[move][rowIndex] == 2){
-            value += 5;
-            if(value >= 15){
-                return 1000000;
+/* This matches a pattern so we can assign an appropriate values to the evaluation
+ * 0 = blank space
+ * 1 = Red Piece
+ * 2 = Black Piece
+ * 3 = Out of Bounds
+ * 4 = Don't care whats in that spot
+ */
+bool pattern(int zero, int one, int two){
+    if(zero == segment[0]){
+        if(one == segment[1]){
+            if((two == 4) || (segment[2] == two)){
+                return true;
             }
         }
+    }
+    return false;
+}
+
+/* Reads the pattern of a segment and counts any meaningful spaces.
+ */
+void countSegment(){
+    //patterns that have adjacent black
+    if(pattern(2,2,2)){
+        adjacentBlack += 3;
+    }
+    else if(pattern(2,2,0)){
+        adjacentBlack += 2;
+        empty += 1;
+    }
+    else if(pattern(2,2,1) || pattern(2,2,3)){
+        adjacentBlack += 2;
+    }
+    else if(pattern(2,0,2)){
+        adjacentBlack += 1;
+        friendlyBlack += 1;
+        empty += 1;
+    }
+    else if(pattern(2,0,0)){
+        adjacentBlack += 1;
+        empty += 2;
+    }
+    else if(pattern(2,0,3) || pattern(2,0,1)){
+        adjacentBlack += 1;
+        empty += 1;
+    }
+    else if(pattern(2,1,4) || pattern(2,3,3)){
+        adjacentBlack += 1;
+    }
+    //patterns that have only friendly black
+    else if(pattern(0,2,2)){
+        friendlyBlack += 2;
+        empty += 1;
+    }
+    else if(pattern(0,0,2) || pattern(0,2,0)){
+        friendlyBlack += 1;
+        empty += 2;
+    }
+    else if(pattern(0,2,1) || pattern(0,2,3)){
+        friendlyBlack += 1;
+        empty += 1;
+    }
+    //patterns that only posses viable empty spots
+    else if(pattern(0,0,0)){
+        empty += 3;
+    }
+    else if(pattern(0,0,1) || pattern(0,0,3)){
+        empty += 2;
+    }
+    else if(pattern(0,1,4) || pattern(0,3,3)){
+        empty += 1;
+    }
+    //patterns that have adjacent red
+    else if(pattern(1,1,1)){
+        adjacentRed += 3;
+    }
+    else if(pattern(1,1,3) || pattern(1,1,2)){
+        adjacentRed += 2;
+    }
+    else if(pattern(1,2,4) || pattern(1,3,3)){
+        adjacentRed += 1;
+    }
+    else{
+        //the remaining patterns should adjust nothing
+    }
+}
+
+/* Assigns an overall value to the segment counts
+ */
+void calculateValue(){
+     if(adjacentBlack >= 3){
+        value += 1000000;
+    }
+    else if(adjacentRed >= 3){
+        value += 5000;
+    }
+    else{
+        value += (adjacentBlack * 5)  + (friendlyBlack * 3) + empty;
+    }
+}
+
+void calculateUpDown(int move){
+    //count up
+    int columnIndex = move;
+    int rowIndex = move[top] + 1;
+    for(int x = 0; x < 3; x++){
+        if(rowIndex > 5)
+            segment[x] = 3;
         else
-            break;
-        spacesSearched--;
+                segment[x] = board[columnIndex][rowIndex];
+        rowIndex++;
+    }
+    countSegment();
+    
+    //count down
+    columnIndex = move;
+    rowIndex = move[top] - 1;
+    for(int x = 0; x < 3; x++){
+        if(rowIndex < 0)
+            segment[x] = 3;
+        else
+                segment[x] = board[columnIndex][rowIndex];
         rowIndex--;
     }
+    countSegment();
     
-    //give value above possible move (every blank space above is worth 1 point)
-    if(top[move] < 2)
-        value += 3;
-    else
-        value += top[move];
-    
-    return value;
+    calculateValue();
+    resetEvaluationCounts();
 }
 
-int calculateLeftRight(int move){
-    //value left
-    int value = 0;
-    int adjacentBlack = 0;
+void calculateRightLeft(int move){
+    //count right
     int columnIndex = move + 1;
-    int spacesSearched = 3;
-    while(spacesSearched > 0){
+    int rowIndex = top[move];
+    for(int x = 0; x < 3; x++){
         if(columnIndex > 6)
-            break;
-        else if(board[columnIndex][top[move]] == 0)
-            value += 1;
-        else if(board[columnIndex][top[move]] == 2){
-            value += 5;
-            adjacentBlack++;
-            if(adjacentBlack >= 3){
-                return 1000000;
-            }
-        }
+            segment[x] = 3;
         else
-            break;
+            segment[x] = board[columnIndex][rowIndex];
         columnIndex++;
-        spacesSearched--;
     }
-    //value right
-    columnIndex = move - 1;
-    spacesSearched = 3;
-    while(spacesSearched > 0){
-        if(columnIndex < 0)
-            break;
-        else if(board[columnIndex][top[move]] == 0)
-            value += 1;
-        else if(board[columnIndex][top[move]] == 2){
-            value += 5;
-            adjacentBlack++;
-            if(adjacentBlack >= 3){
-                return 1000000;
-            }
-        }
-        else
-            break;
-        columnIndex++;
-        spacesSearched--;
-    }
-    return value;
+    countSegment();
     
+    //count right
+    columnIndex = move - 1;
+    rowIndex = top[move];
+    for(int x = 0; x < 3; x++){
+        if(columnIndex <  0)
+            segment[x] = 3;
+        else
+            segment[x] = board[columnIndex][rowIndex];
+        columnIndex--;
+    }
+    countSegment();
+    
+    calculateValue();
+    resetEvaluationCounts();
 }
 
-int calculateFowardDiagonal(int move){
-    //diagonal up and right
-    int value = 0;
-    int adjacentBlack = 0;
+void calculateFowardDiagonal(int move){
+    //count left and up
     int columnIndex = move + 1;
     int rowIndex = top[move] + 1;
-    int spacesSearched = 3;
-    while(spacesSearched > 0){
-        if((columnIndex > 6) || (rowIndex >  5))
-            break;
-        else if(board[columnIndex][top[move]] == 0)
-            value += 1;
-        else if(board[columnIndex][top[move]] == 2){
-            value += 5;
-            adjacentBlack++;
-            if(adjacentBlack >= 3){
-                return 1000000;
-            }
-        }
+    for(int x = 0; x < 3; x++){
+        if((columnIndex > 6) || (rowIndex > 5))
+            segment[x] = 3;
         else
-            break;
+            segment[x] = board[columnIndex][rowIndex];
         columnIndex++;
         rowIndex++;
-        spacesSearched--;
     }
-    
-    //diagonal down and left
+    countSegment();
+    //count right and down
     columnIndex = move - 1;
     rowIndex = top[move] - 1;
-    spacesSearched = 3;
-    while(spacesSearched > 0){
-        if((columnIndex < 0) || (rowIndex <  0))
-            break;
-        else if(board[columnIndex][top[move]] == 0)
-            value += 1;
-        else if(board[columnIndex][top[move]] == 2){
-            value += 5;
-            adjacentBlack++;
-            if(adjacentBlack >= 3){
-                return 1000000;
-            }
-        }
+      for(int x = 0; x < 3; x++){
+        if((columnIndex < 0) || (rowIndex < 0))
+            segment[x] = 3;
         else
-            break;
+            segment[x] = board[columnIndex][rowIndex];
         columnIndex--;
         rowIndex--;
-        spacesSearched--;
     }
-    return value;
+    countSegment();
+    
+    calculateValue();
+    resetEvaluationCounts();
 }
 
 int calculateBackwardDiagonal(int move){
-    //diagonal down and right
-    int value = 0;
-    int adjacentBlack = 0;
+     //count left and down
     int columnIndex = move + 1;
     int rowIndex = top[move] - 1;
-    int spacesSearched = 3;
-    while(spacesSearched > 0){
-        if((columnIndex > 6) || (rowIndex <  0))
-            break;
-        else if(board[columnIndex][top[move]] == 0)
-            value += 1;
-        else if(board[columnIndex][top[move]] == 2){
-            value += 5;
-            adjacentBlack++;
-            if(adjacentBlack >= 3){
-                return 1000000;
-            }
-        }
+    for(int x = 0; x < 3; x++){
+        if((columnIndex > 6) || (rowIndex < 0))
+            segment[x] = 3;
         else
-            break;
+            segment[x] = board[columnIndex][rowIndex];
         columnIndex++;
         rowIndex--;
-        spacesSearched--;
     }
+    countSegment();
     
-    //diagonal down and left
+    //count right and up
     columnIndex = move - 1;
     rowIndex = top[move] + 1;
-    spacesSearched = 3;
-    while(spacesSearched > 0){
-        if((columnIndex < 0) || (rowIndex >  5))
-            break;
-        else if(board[columnIndex][top[move]] == 0)
-            value += 1;
-        else if(board[columnIndex][top[move]] == 2){
-            value += 5;
-            adjacentBlack++;
-            if(adjacentBlack >= 3){
-                return 1000000;
-            }
-        }
+      for(int x = 0; x < 3; x++){
+        if((columnIndex < 0) || (rowIndex > 5))
+            segment[x] = 3;
         else
-            break;
+            segment[x] = board[columnIndex][rowIndex];
         columnIndex--;
         rowIndex++;
-        spacesSearched--;
     }
-    return value;
+    countSegment();
+    
+    calculateValue();
+    resetEvaluationCounts();
 }
 
-int calculateMoveValue(int move){
-    int moveValue = 0;
-    moveValue += calculateUpDown(move);
-    moveValue += calculateLeftRight(move);
-    moveValue += calculateFowardDiagonal(move);
-    moveValue += calculateBackwardDiagonal(move);
-    return moveValue;
-    
+void calculateMoveValue(int move){
+
+    calculateUpDown(move);
+    calculateRightLeft(move);
+    calculateFowardDiagonal(move);
+    calculateBackwardDiagonal(move);
 }
 
 int computerMove(){
-    int moveValue = 0;
     int bestMove = 0;
     int bestMoveValue = 0;
 
     for(int x = 0; x < 7; x++){
-        moveValue = calculateMoveValue(x);
-        if(moveValue > bestMoveValue){
-            bestMove = x;
-            bestMoveValue = moveValue;
+        if(top[x] > 5){
+            value = 0;
+            cout << "MOVE:" << x << " VALUE:" << value << endl;
+            continue;
         }
+        calculateMoveValue(x);
+        cout << "MOVE:" << x << " VALUE:" << value << endl;
+        if(value > bestMoveValue){
+            bestMove = x;
+            bestMoveValue = value;
+        }
+        value = 0;
     }
     return bestMove;
 }
@@ -259,15 +324,15 @@ int computerMove(){
 int main(int argc, char** argv) {
 
     drawBoard();
-    
     while(1){
         //players turn
         int playerMove = getPlayerMove();
         makeMove(1, playerMove);
+        //computers turn
         int compMove = computerMove();
         makeMove(2, compMove);
+        //drawBoard
         drawBoard();
-        //computers turn
     }
     
     return 0;
