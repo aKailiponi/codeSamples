@@ -4,6 +4,10 @@ Hi this repository is simply a place where I will dump sample code written by my
 
 
 ----------HTML SAMPLE CODE----------
+1.Content
+Possesses the answers to the questions issued by the code-foo application.  There is also the license plate generator where a target population can be enetered and the Ideal combination of letters and numbers are determined in the chart. The calculator is written in javascript.
+
+2.
 place license.xhtml, licensecode.js, and style.css into the same folder. Open license.xhtml with any browser.
 
 
